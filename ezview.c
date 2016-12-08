@@ -19,14 +19,8 @@ Vertex vertexes[] = {
   {{1, -1}, {0.99999, 0}},
   {{1, 1},  {0.99999, 0.99999}},
   {{-1, 1}, {0, 0.99999}},
-  {{-1, 1}, {0, 0.99999}},
   {{-1, -1}, {0, 0}},
   {{1, -1}, {0.99999, 0}}
-};
-
-const GLubyte indices[] = {
-  0, 1, 2,
-  2, 3, 0
 };
 
 static const char* vertex_shader_text =
@@ -240,7 +234,9 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
-    window = glfwCreateWindow(640, 480, "ezview", NULL, NULL);
+    int windowWidth = 640;
+    int windowHeight = 480;
+    window = glfwCreateWindow(windowWidth, windowHeight, "ezview", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -334,7 +330,7 @@ int main(int argc, char* argv[])
         glUseProgram(program);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_TRIANGLES, 3, 3);
+        glDrawArrays(GL_TRIANGLES, 2, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
