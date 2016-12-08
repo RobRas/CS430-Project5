@@ -42,6 +42,8 @@ static const char* fragment_shader_text =
 "    gl_FragColor = texture2D(Texture, TexCoordOut);\n"
 "}\n";
 
+float rotation = 3.1415;
+
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
@@ -49,8 +51,13 @@ static void error_callback(int error, const char* description)
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, 1);
+    } else if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+      rotation -= 1.5708;
+    } else if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
+      rotation += 1.5708;
+    }
 }
 
 void glCompileShaderOrDie(GLuint shader) {
@@ -217,8 +224,6 @@ int main(int argc, char* argv[])
   loadPPM(fh);
   fclose(fh);
 
-  printf("%d", image[0]);
-
     GLFWwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
     GLint mvp_location, vpos_location, vcol_location;
@@ -323,7 +328,7 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT);
 
         mat4x4_identity(m);
-        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+        mat4x4_rotate_Z(m, m, rotation);
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
 
