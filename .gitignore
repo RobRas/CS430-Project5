@@ -1,2 +1,5 @@
 *.exe
 *.ppm
+
+demo.c
+texdemo.c
