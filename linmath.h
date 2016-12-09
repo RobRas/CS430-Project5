@@ -258,8 +258,8 @@ static inline void mat4x4_rotate_Z(mat4x4 Q, mat4x4 M, float angle)
 }
 static inline void mat4x4_shear(mat4x4 Q, mat4x4 M, float h) {
 	mat4x4 R = {
-		{1, 0, h, 0},
-		{0, 1, h, 0},
+		{1, 0, 0, 0},
+		{h, 1, 0, 0},
 		{0, 0, 1, 0},
 		{0, 0, 0, 1}
 	};

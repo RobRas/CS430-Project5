@@ -49,7 +49,7 @@ float rotation = 3.1415;
 float trans_x = 0;
 float trans_y = 0;
 float scale = 1;
-float shear = 1;
+float shear = 0;
 
 static void error_callback(int error, const char* description)
 {
@@ -76,10 +76,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
       scale += 50;
     } else if (key == GLFW_KEY_F && action == GLFW_PRESS) {
       scale -= 50;
-    } else if (key == GLFW_KEY_C && action == GLFW_PRESS) {
-      shear += 1;
     } else if (key == GLFW_KEY_X && action == GLFW_PRESS) {
-      shear -= 1;
+      shear -= 0.5;
+    } else if (key == GLFW_KEY_C && action == GLFW_PRESS) {
+      shear += 0.5;
     }
 }
 
