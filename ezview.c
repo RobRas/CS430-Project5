@@ -8,7 +8,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <assert.h>
+
+#define PI acos(-1.0)
 
 typedef struct {
   float Position[2];
@@ -43,6 +46,10 @@ static const char* fragment_shader_text =
 "}\n";
 
 float rotation = 3.1415;
+float trans_x = 0;
+float trans_y = 0;
+float scale = 1;
+float shear = 1;
 
 static void error_callback(int error, const char* description)
 {
@@ -54,9 +61,25 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, 1);
     } else if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-      rotation -= 1.5708;
+      rotation -= PI / 2;
     } else if (key == GLFW_KEY_Q && action == GLFW_PRESS) {
-      rotation += 1.5708;
+      rotation += PI / 2;
+    } else if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+      trans_y += 0.5;
+    } else if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+      trans_x -= 0.5;
+    } else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+      trans_y -= 0.5;
+    } else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
+      trans_x += 0.5;
+    } else if (key == GLFW_KEY_R && action == GLFW_PRESS && scale < 2.2) {
+      scale += 0.25;
+    } else if (key == GLFW_KEY_F && action == GLFW_PRESS && scale > 0.2) {
+      scale -= 0.25;
+    } else if (key == GLFW_KEY_C && action == GLFW_PRESS) {
+      shear += 0.25;
+    } else if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+      shear -= 0.25;
     }
 }
 
@@ -241,6 +264,21 @@ int main(int argc, char* argv[])
 
     int windowWidth = 640;
     int windowHeight = 480;
+
+    const float x = image_width / (float)windowWidth;
+    const float y = image_height / (float)windowHeight;
+
+    vertexes[0].Position[0] = x;
+    vertexes[0].Position[1] = -y;
+    vertexes[1].Position[0] = x;
+    vertexes[1].Position[1] = y;
+    vertexes[2].Position[0] = -x;
+    vertexes[2].Position[1] = y;
+    vertexes[3].Position[0] = -x;
+    vertexes[3].Position[1] = -y;
+    vertexes[4].Position[0] = x;
+    vertexes[4].Position[1] = -y;
+
     window = glfwCreateWindow(windowWidth, windowHeight, "ezview", NULL, NULL);
     if (!window)
     {
@@ -317,20 +355,19 @@ int main(int argc, char* argv[])
 
     while (!glfwWindowShouldClose(window))
     {
-        float ratio;
         int width, height;
         mat4x4 m, p, mvp;
 
         glfwGetFramebufferSize(window, &width, &height);
-        ratio = width / (float) height;
 
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
 
         mat4x4_identity(m);
+        mat4x4_translate(m, trans_x, trans_y, 0);
         mat4x4_rotate_Z(m, m, rotation);
-        mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-        mat4x4_mul(mvp, p, m);
+        mat4x4_scale(mvp, m, scale);
+        mat4x4_shear(mvp, m, shear);
 
         glUseProgram(program);
         glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
