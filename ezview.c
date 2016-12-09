@@ -73,9 +73,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     } else if (key == GLFW_KEY_D && action == GLFW_PRESS) {
       trans_x += 0.5;
     } else if (key == GLFW_KEY_R && action == GLFW_PRESS) {
-      scale += 50;
+      scale += 0.5;
     } else if (key == GLFW_KEY_F && action == GLFW_PRESS) {
-      scale -= 50;
+      scale -= 0.5;
     } else if (key == GLFW_KEY_X && action == GLFW_PRESS) {
       shear -= 0.5;
     } else if (key == GLFW_KEY_C && action == GLFW_PRESS) {
@@ -365,8 +365,8 @@ int main(int argc, char* argv[])
 
         mat4x4_identity(m);
         mat4x4_translate(m, trans_x, trans_y, 0);
+        mat4x4_scale_lin(m, m, scale);
         mat4x4_rotate_Z(m, m, rotation);
-        mat4x4_scale(m, m, scale);
         mat4x4_shear(mvp, m, shear);
 
         glUseProgram(program);

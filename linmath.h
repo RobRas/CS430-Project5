@@ -153,6 +153,15 @@ static inline void mat4x4_mul(mat4x4 M, mat4x4 a, mat4x4 b)
 	}
 	mat4x4_dup(M, temp);
 }
+static inline void mat4x4_scale_lin(mat4x4 M, mat4x4 a, float k) {
+	mat4x4 temp = {
+		{k, 0, 0, 0},
+		{0, k, 0, 0},
+		{0, 0, k, 0},
+		{0, 0, 0, 1}
+	};
+	mat4x4_mul(M, a, temp);
+}
 static inline void mat4x4_mul_vec4(vec4 r, mat4x4 M, vec4 v)
 {
 	int i, j;
